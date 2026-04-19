@@ -1,0 +1,27 @@
+flutter_native_splash:
+  # Warna background splash — sesuai tema light
+  color: "#F7F6F3"
+
+  # Warna background splash dark mode
+  color_dark: "#141312"
+
+  # Logo/image di tengah splash
+  # Kalau belum punya image, pakai icon bawaan dulu
+  # image: assets/images/splash_logo.png
+  # image_dark: assets/images/splash_logo_dark.png
+
+  # Ukuran logo (persen dari layar)
+  # image_full_screen: false
+
+  # Android 12+ splash
+  android_12:
+    color: "#F7F6F3"
+    color_dark: "#141312"
+    # icon_background_color: "#F7F6F3"
+
+  # Durasi minimum splash ditampilkan
+  # (dalam milliseconds, 0 = secepatnya)
+  fullscreen: false
+  android: true
+  ios: true
+  web: false

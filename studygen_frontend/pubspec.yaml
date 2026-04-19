@@ -1,0 +1,49 @@
+name: studygen_app
+description: PDF to Quiz Generator — StudyGen
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Networking
+  dio: ^5.4.0
+
+  # File picker
+  file_picker: ^8.0.0
+
+  # Secure storage (ganti SharedPreferences untuk token)
+  flutter_secure_storage: ^9.0.0
+
+  # Local database untuk cache
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # State management
+  provider: ^6.1.2
+
+  # Routing
+  go_router: ^13.2.0
+
+  # Supabase auth (Google OAuth + email verification)
+  supabase_flutter: ^2.5.6
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  cupertino_icons: ^1.0.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.8
+
+flutter:
+  uses-material-design: true
