@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: studygen-backend
+    runtime: go
+    rootDir: studygen_backend
+    plan: free
+    buildCommand: go build -o app .
+    startCommand: ./app
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: DB_SSLMODE
+        value: require
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MISTRAL_API_KEY
+        sync: false

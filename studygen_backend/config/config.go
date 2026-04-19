@@ -32,7 +32,7 @@ func Load() {
 	}
 
 	App = &Config{
-		AppPort:         getEnv("APP_PORT", "8000"),
+		AppPort:         getAppPort(),
 		AppEnv:          getEnv("APP_ENV", "development"),
 		DatabaseURL:     getEnv("DATABASE_URL", ""),
 		DBHost:          getEnv("DB_HOST", "127.0.0.1"),
@@ -47,6 +47,16 @@ func Load() {
 		GroqAPIKey:      getEnv("GROQ_API_KEY", ""),
 		MistralAPIKey:   getEnv("MISTRAL_API_KEY", ""),
 	}
+}
+
+func getAppPort() string {
+	if val := os.Getenv("APP_PORT"); val != "" {
+		return val
+	}
+	if val := os.Getenv("PORT"); val != "" {
+		return val
+	}
+	return "8000"
 }
 
 func getEnv(key, fallback string) string {
