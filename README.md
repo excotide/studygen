@@ -30,11 +30,6 @@ StudyGen dirancang untuk mahasiswa dan pelajar yang ingin:
 
 Versi APK dipublikasikan melalui GitHub Releases.
 
-Status saat ini:
-
-- Backend sudah berjalan di server.
-- Persiapan rilis APK sedang berlangsung.
-
 ## Catatan
 
 - Dokumentasi ini sengaja difokuskan untuk pengguna akhir dan calon tester APK.
