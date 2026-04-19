@@ -20,11 +20,13 @@ class AuthProvider extends ChangeNotifier {
   String? get pendingVerificationEmail => _pendingVerificationEmail;
   bool get isLoggedIn    => _user != null;
 
+  static const _mobileRedirectUrl = 'studygen://login-callback/';
+
   String _verificationRedirectUrl() {
     if (kIsWeb) {
       return Uri.base.origin;
     }
-    return 'io.supabase.flutter://login-callback/';
+    return _mobileRedirectUrl;
   }
 
   bool _isExistingEmailResponse(AuthResponse res) {
@@ -158,7 +160,7 @@ class AuthProvider extends ChangeNotifier {
     try {
       final redirectUrl = kIsWeb
           ? Uri.base.origin
-          : 'io.supabase.flutter://login-callback/';
+          : _mobileRedirectUrl;
 
       await _auth.signInWithOAuth(
         OAuthProvider.google,

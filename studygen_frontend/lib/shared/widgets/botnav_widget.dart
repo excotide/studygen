@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../features/generate/providers/quiz_provider.dart';
 
-class MainScaffold extends StatelessWidget {
+class MainScaffold extends StatefulWidget {
   final Widget child;
   final String activeRoute;
 
@@ -13,26 +13,72 @@ class MainScaffold extends StatelessWidget {
     required this.activeRoute,
   });
 
-  int get _currentIndex {
-    switch (activeRoute) {
-      case '/home':     return 0;
-      case '/generate': return 1;
-      case '/history':  return 2;
-      default:          return 0;
+  @override
+  State<MainScaffold> createState() => _MainScaffoldState();
+}
+
+class _MainScaffoldState extends State<MainScaffold> {
+  static int? _lastTabIndex;
+  late final Offset _beginOffset;
+
+  int _routeToIndex(String route) {
+    switch (route) {
+      case '/home':
+        return 0;
+      case '/generate':
+        return 1;
+      case '/history':
+        return 2;
+      default:
+        return 0;
     }
   }
 
+  String _indexToRoute(int index) {
+    switch (index) {
+      case 0:
+        return '/home';
+      case 1:
+        return '/generate';
+      case 2:
+        return '/history';
+      default:
+        return '/home';
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    final current = _routeToIndex(widget.activeRoute);
+    final previous = _lastTabIndex;
+
+    if (previous == null || previous == current) {
+      _beginOffset = Offset.zero;
+    } else {
+      // Pindah ke tab kiri => konten bergerak ke kanan. Pindah ke kanan => ke kiri.
+      _beginOffset = current < previous
+          ? const Offset(-0.16, 0)
+          : const Offset(0.16, 0);
+    }
+
+    _lastTabIndex = current;
+  }
+
+  int get _currentIndex {
+    return _routeToIndex(widget.activeRoute);
+  }
+
   void _onTap(BuildContext context, int index) {
+    if (index == _currentIndex) return;
+
     if (index == 0 || index == 2) {
       try {
         context.read<QuizProvider>().fetchHistory(forceRefresh: true);
       } catch (_) {}
     }
-    switch (index) {
-      case 0: context.go('/home');     break;
-      case 1: context.go('/generate'); break;
-      case 2: context.go('/history');  break;
-    }
+
+    context.go(_indexToRoute(index));
   }
 
   @override
@@ -41,7 +87,23 @@ class MainScaffold extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: child,
+      body: ClipRect(
+        child: TweenAnimationBuilder<Offset>(
+          tween: Tween<Offset>(begin: _beginOffset, end: Offset.zero),
+          duration: const Duration(milliseconds: 240),
+          curve: Curves.easeOutCubic,
+          child: widget.child,
+          builder: (context, offset, child) {
+            return Transform.translate(
+              offset: Offset(offset.dx * 120, 0),
+              child: Opacity(
+                opacity: 1 - (offset.dx.abs() * 0.35),
+                child: child,
+              ),
+            );
+          },
+        ),
+      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: cs.outline.withValues(alpha: 0.3))),

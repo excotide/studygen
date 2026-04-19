@@ -1,7 +1,13 @@
 import 'package:flutter/foundation.dart';
 
 class ApiConstants {
+  static const _apiBaseFromEnv = String.fromEnvironment('API_BASE_URL');
+
   static String get baseUrl {
+    if (_apiBaseFromEnv.isNotEmpty) {
+      return _apiBaseFromEnv;
+    }
+
     if (kIsWeb) {
       return 'http://localhost:8080/api';
     }

@@ -44,11 +44,15 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/home',
-      builder: (context, state) => const HomeScreen(),
+      pageBuilder: (context, state) => const NoTransitionPage(
+        child: HomeScreen(),
+      ),
     ),
     GoRoute(
       path: '/generate',
-      builder: (context, state) => const GenerateScreen(),
+      pageBuilder: (context, state) => const NoTransitionPage(
+        child: GenerateScreen(),
+      ),
     ),
     GoRoute(
       path: '/summary',
@@ -76,7 +80,9 @@ final appRouter = GoRouter(
     ),
     GoRoute(
       path: '/history',
-      builder: (context, state) => const HistoryScreen(),
+      pageBuilder: (context, state) => const NoTransitionPage(
+        child: HistoryScreen(),
+      ),
     ),
   ],
 );

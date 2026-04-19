@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../auth/providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -15,9 +18,41 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailCtrl = TextEditingController();
   final _passCtrl = TextEditingController();
   bool _obscure = true;
+  StreamSubscription<AuthState>? _authSub;
+
+  bool _isAllowedUser(User? user) {
+    if (user == null) return false;
+    final provider = user.appMetadata['provider']?.toString();
+    final isGoogle = provider == 'google';
+    final isVerifiedEmail = user.emailConfirmedAt != null;
+    return isGoogle || isVerifiedEmail;
+  }
+
+  void _goHomeIfSignedIn(User? user) {
+    if (!_isAllowedUser(user) || !mounted) return;
+    context.go('/home');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    final auth = Supabase.instance.client.auth;
+    _authSub = auth.onAuthStateChange.listen((state) {
+      final sessionUser = state.session?.user;
+      if (sessionUser != null) {
+        _goHomeIfSignedIn(sessionUser);
+      }
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _goHomeIfSignedIn(auth.currentUser);
+    });
+  }
 
   @override
   void dispose() {
+    _authSub?.cancel();
     _emailCtrl.dispose();
     _passCtrl.dispose();
     super.dispose();
@@ -104,11 +139,29 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('StudyGen',
-                    style: GoogleFonts.dmSerifDisplay(
-                        fontSize: 32,
+                Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
                         color: cs.onSurface,
-                        letterSpacing: -.5)),
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 18,
+                        color: cs.surface,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('Studygen',
+                        style: GoogleFonts.dmSerifDisplay(
+                            fontSize: 32,
+                            color: cs.onSurface,
+                            letterSpacing: -.5)),
+                  ],
+                ),
                 const SizedBox(height: 6),
                 Text('Ubah materi kuliah menjadi rangkuman & kuis.',
                     style: tt.bodySmall),

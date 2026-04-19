@@ -17,6 +17,13 @@ class _SummaryScreenState extends State<SummaryScreen> {
   late QuizModel _quiz;
   bool _isGeneratingQuiz = false;
 
+  bool _hasUsableQuestions(QuizModel quiz) {
+    if (quiz.questions.isEmpty) return false;
+    return quiz.questions.every(
+      (q) => q.question.trim().isNotEmpty && q.options.length >= 2,
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -24,13 +31,23 @@ class _SummaryScreenState extends State<SummaryScreen> {
   }
 
   Future<void> _startOrGenerateQuiz() async {
-    if (_quiz.questions.isNotEmpty) {
+    final provider = context.read<QuizProvider>();
+    setState(() => _isGeneratingQuiz = true);
+
+    // Data dari history bersifat ringkas (sering hanya jumlah soal), jadi hydrate dulu.
+    final hydrated = await provider.fetchQuizById(_quiz.id);
+    if (!mounted) return;
+    if (hydrated != null) {
+      _quiz = hydrated;
+    }
+
+    if (_hasUsableQuestions(_quiz)) {
+      setState(() => _isGeneratingQuiz = false);
       context.go('/quiz', extra: _quiz);
       return;
     }
 
-    setState(() => _isGeneratingQuiz = true);
-    final provider = context.read<QuizProvider>();
+    // Jika memang belum ada soal valid, baru generate quiz dari rangkuman.
     final generated = await provider.generateQuizFromSummary(_quiz.id);
 
     if (!mounted) return;

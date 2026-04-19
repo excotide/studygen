@@ -92,9 +92,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('StudyGen',
-                    style: GoogleFonts.dmSerifDisplay(
-                        fontSize: 32, color: cs.onSurface, letterSpacing: -.5)),
+                Row(
+                  children: [
+                    Container(
+                      width: 34,
+                      height: 34,
+                      decoration: BoxDecoration(
+                        color: cs.onSurface,
+                        borderRadius: BorderRadius.circular(9),
+                      ),
+                      child: Icon(
+                        Icons.auto_awesome_rounded,
+                        size: 18,
+                        color: cs.surface,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Text('Studygen',
+                        style: GoogleFonts.dmSerifDisplay(
+                            fontSize: 32, color: cs.onSurface, letterSpacing: -.5)),
+                  ],
+                ),
                 const SizedBox(height: 6),
                 Text('Buat akun untuk mulai belajar lebih efisien.',
                     style: tt.bodySmall),

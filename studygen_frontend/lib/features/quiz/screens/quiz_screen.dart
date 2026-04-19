@@ -58,11 +58,13 @@ class _QuizScreenState extends State<QuizScreen> {
 
     return Scaffold(
       backgroundColor: cs.surface,
-      body: Column(
-        children: [
+      body: SafeArea(
+        child: Column(
+          children: [
+          const SizedBox(height: 8),
           // Top bar
           Container(
-            padding: const EdgeInsets.fromLTRB(36, 20, 36, 16),
+            padding: const EdgeInsets.fromLTRB(36, 24, 36, 16),
             decoration: BoxDecoration(
               color: cs.surfaceContainerLow,
               border: Border(bottom: BorderSide(color: cs.outline.withValues(alpha: 0.4))),
@@ -157,7 +159,8 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
             ),
           ),
-        ],
+          ],
+        ),
       ),
     );
   }
